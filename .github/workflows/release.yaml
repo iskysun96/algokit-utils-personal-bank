@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.vscode/**'
+      - '.idea/**'
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  algokit-utils-demo-retreat-2025-contracts-validate:
+    name: Run algokit-utils-demo-retreat-2025-contracts release
+    secrets: inherit
+    uses: ./.github/workflows/algokit-utils-demo-retreat-2025-contracts-ci.yaml
+
+  algokit-utils-demo-retreat-2025-contracts-release:
+    name: Run algokit-utils-demo-retreat-2025-contracts release
+    secrets: inherit
+    uses: ./.github/workflows/algokit-utils-demo-retreat-2025-contracts-cd.yaml
+    needs: algokit-utils-demo-retreat-2025-contracts-validate
+
+  algokit-utils-demo-retreat-2025-frontend-validate:
+    name: Run algokit-utils-demo-retreat-2025-frontend release
+    secrets: inherit
+    uses: ./.github/workflows/algokit-utils-demo-retreat-2025-frontend-ci.yaml
+
+  algokit-utils-demo-retreat-2025-frontend-release:
+    name: Run algokit-utils-demo-retreat-2025-frontend release
+    secrets: inherit
+    uses: ./.github/workflows/algokit-utils-demo-retreat-2025-frontend-cd.yaml
+    needs: algokit-utils-demo-retreat-2025-frontend-validate

@@ -1,0 +1,14 @@
+name: Pull Request validation
+
+on: [pull_request]
+
+
+jobs:
+  algokit-utils-demo-retreat-2025-contracts-ci:
+    name: Run algokit-utils-demo-retreat-2025-contracts validation
+    uses: ./.github/workflows/algokit-utils-demo-retreat-2025-contracts-ci.yaml
+
+  algokit-utils-demo-retreat-2025-frontend-ci:
+    name: Run algokit-utils-demo-retreat-2025-frontend validation
+    uses: ./.github/workflows/algokit-utils-demo-retreat-2025-frontend-ci.yaml
+
