@@ -61,7 +61,7 @@ const Deposit = ({ openModal, setModalState }: AppCallsInterface) => {
       return
     }
 
-    enqueueSnackbar(`Successfully deposited: ${response.return!}`, { variant: 'success' })
+    enqueueSnackbar(`Your balance is now: ${Number(response.return!) / 1000000} algos`, { variant: 'success' })
 
     setLoading(false)
   }
@@ -70,11 +70,11 @@ const Deposit = ({ openModal, setModalState }: AppCallsInterface) => {
     <dialog id="appcalls_modal" className={`modal ${openModal ? 'modal-open' : ''} bg-slate-200`}>
       <form method="dialog" className="modal-box">
         {}
-        <h3 className="font-bold text-lg">Deposit to your personal bank</h3>
+        <h3 className="font-bold text-lg">Deposit ALGO</h3>
         <br />
         <input
           type="text"
-          placeholder="Provide input to hello function"
+          placeholder="How much ALGO do you want to deposit?"
           className="input input-bordered w-full"
           value={depositAmount}
           onChange={(e) => {

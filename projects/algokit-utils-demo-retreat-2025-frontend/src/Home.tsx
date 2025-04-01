@@ -6,6 +6,7 @@ import DeployApp from './components/deployApp'
 import Deposit from './components/Deposit'
 import Transact from './components/Transact'
 import Withdraw from './components/Withdraw'
+
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
@@ -14,6 +15,7 @@ const Home: React.FC<HomeProps> = () => {
   const [deployAppModal, setDeployAppModal] = useState<boolean>(false)
   const [depositModal, setDepositsModal] = useState<boolean>(false)
   const [withdrawModal, setWithdrawModal] = useState<boolean>(false)
+
   const { activeAddress } = useWallet()
 
   const toggleWalletModal = () => {
@@ -37,11 +39,11 @@ const Home: React.FC<HomeProps> = () => {
   }
 
   return (
-    <div className="hero min-h-screen bg-teal-400">
+    <div className="hero min-h-screen bg-indigo-300">
       <div className="hero-content text-center rounded-lg p-6 max-w-md bg-white mx-auto">
         <div className="max-w-md">
           <h1 className="text-4xl">
-            Use <div className="font-bold">AlgoKit Utils!!!</div>
+            Use <div className="font-bold">AlgoKit Utils! 😤</div>
           </h1>
           <p className="py-6">
             Chris built this demo app while listening to Cosimos talking about xASA. That's how easy it is to use AlgoKit Utils!
@@ -59,30 +61,30 @@ const Home: React.FC<HomeProps> = () => {
 
             <div className="divider" />
             <button data-test-id="connect-wallet" className="btn m-2" onClick={toggleWalletModal}>
-              Wallet Connection
+              {(activeAddress && 'Disconnect Wallet') || 'Connect Wallet'}
             </button>
-
+            {activeAddress && <div className="divider" />}
             {activeAddress && (
               <button data-test-id="transactions-demo" className="btn m-2" onClick={toggleDemoModal}>
-                Transactions Demo
+                💸 Donate to a random account
               </button>
             )}
 
             {activeAddress && (
               <button data-test-id="appcalls-demo" className="btn m-2" onClick={toggleDeployAppModal}>
-                Deploy Personal Bank Contract
+                🏦 Deploy Personal Bank Contract
               </button>
             )}
-
+            {activeAddress && <div className="divider" />}
             {activeAddress && (
               <button data-test-id="appcalls-demo" className="btn m-2" onClick={toggleDepositModal}>
-                Deposit to your personal bank
+                Deposit ALGO
               </button>
             )}
 
             {activeAddress && (
               <button data-test-id="appcalls-demo" className="btn m-2" onClick={toggleWithdrawModal}>
-                Withdraw from your personal bank
+                Withdraw your deposits
               </button>
             )}
           </div>

@@ -1,6 +1,5 @@
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 import { AlgoAmount } from '@algorandfoundation/algokit-utils/types/amount'
-import { OnSchemaBreak, OnUpdate } from '@algorandfoundation/algokit-utils/types/app'
 import { useWallet } from '@txnlab/use-wallet-react'
 import { useSnackbar } from 'notistack'
 import { useState } from 'react'
@@ -37,16 +36,11 @@ const DeployApp = ({ openModal, setModalState }: AppCallsInterface) => {
       defaultSender: activeAddress ?? undefined,
       algorand,
     })
-    const appClient = await factory
-      .deploy({
-        onSchemaBreak: OnSchemaBreak.ReplaceApp,
-        onUpdate: OnUpdate.ReplaceApp,
-      })
-      .catch((e: Error) => {
-        enqueueSnackbar(`Error deploying the contract: ${e.message}`, { variant: 'error' })
-        setLoading(false)
-        return undefined
-      })
+    const appClient = await factory.send.create.bare().catch((e: Error) => {
+      enqueueSnackbar(`Error deploying the contract: ${e.message}`, { variant: 'error' })
+      setLoading(false)
+      return undefined
+    })
 
     if (!appClient) {
       return
