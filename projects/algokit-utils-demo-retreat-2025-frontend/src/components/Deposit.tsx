@@ -29,11 +29,6 @@ const Deposit = ({ openModal, setModalState }: AppCallsInterface) => {
   const sendAppCall = async () => {
     setLoading(true)
 
-    // Please note, in typical production scenarios,
-    // you wouldn't want to use deploy directly from your frontend.
-    // Instead, you would deploy your contract on your backend and reference it by id.
-    // Given the simplicity of the starter contract, we are deploying it on the frontend
-    // for demonstration purposes.
     console.log(localStorage.getItem('deployed-app-id'))
     const appId = JSON.parse(localStorage.getItem('deployed-app-id') ?? '0')
     if (!appId) {
