@@ -2,15 +2,18 @@
 import { useWallet } from '@txnlab/use-wallet-react'
 import React, { useState } from 'react'
 import ConnectWallet from './components/ConnectWallet'
+import DeployApp from './components/deployApp'
+import Deposit from './components/Deposit'
 import Transact from './components/Transact'
-import AppCalls from './components/AppCalls'
-
+import Withdraw from './components/Withdraw'
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
   const [openWalletModal, setOpenWalletModal] = useState<boolean>(false)
   const [openDemoModal, setOpenDemoModal] = useState<boolean>(false)
-  const [appCallsDemoModal, setAppCallsDemoModal] = useState<boolean>(false)
+  const [deployAppModal, setDeployAppModal] = useState<boolean>(false)
+  const [depositModal, setDepositsModal] = useState<boolean>(false)
+  const [withdrawModal, setWithdrawModal] = useState<boolean>(false)
   const { activeAddress } = useWallet()
 
   const toggleWalletModal = () => {
@@ -21,8 +24,16 @@ const Home: React.FC<HomeProps> = () => {
     setOpenDemoModal(!openDemoModal)
   }
 
-  const toggleAppCallsModal = () => {
-    setAppCallsDemoModal(!appCallsDemoModal)
+  const toggleDeployAppModal = () => {
+    setDeployAppModal(!deployAppModal)
+  }
+
+  const toggleDepositModal = () => {
+    setDepositsModal(!depositModal)
+  }
+
+  const toggleWithdrawModal = () => {
+    setWithdrawModal(!withdrawModal)
   }
 
   return (
@@ -30,10 +41,10 @@ const Home: React.FC<HomeProps> = () => {
       <div className="hero-content text-center rounded-lg p-6 max-w-md bg-white mx-auto">
         <div className="max-w-md">
           <h1 className="text-4xl">
-            Welcome to <div className="font-bold">AlgoKit 🙂</div>
+            Use <div className="font-bold">AlgoKit Utils!!!</div>
           </h1>
           <p className="py-6">
-            This starter has been generated using official AlgoKit React template. Refer to the resource below for next steps.
+            Chris built this demo app while listening to Cosimos talking about xASA. That's how easy it is to use AlgoKit Utils!
           </p>
 
           <div className="grid">
@@ -41,9 +52,9 @@ const Home: React.FC<HomeProps> = () => {
               data-test-id="getting-started"
               className="btn btn-primary m-2"
               target="_blank"
-              href="https://github.com/algorandfoundation/algokit-cli"
+              href="https://github.com/algorandfoundation/algokit-utils-ts"
             >
-              Getting started
+              Getting started with AlgoKit Utils
             </a>
 
             <div className="divider" />
@@ -58,15 +69,29 @@ const Home: React.FC<HomeProps> = () => {
             )}
 
             {activeAddress && (
-              <button data-test-id="appcalls-demo" className="btn m-2" onClick={toggleAppCallsModal}>
-                Contract Interactions Demo
+              <button data-test-id="appcalls-demo" className="btn m-2" onClick={toggleDeployAppModal}>
+                Deploy Personal Bank Contract
+              </button>
+            )}
+
+            {activeAddress && (
+              <button data-test-id="appcalls-demo" className="btn m-2" onClick={toggleDepositModal}>
+                Deposit to your personal bank
+              </button>
+            )}
+
+            {activeAddress && (
+              <button data-test-id="appcalls-demo" className="btn m-2" onClick={toggleWithdrawModal}>
+                Withdraw from your personal bank
               </button>
             )}
           </div>
 
           <ConnectWallet openModal={openWalletModal} closeModal={toggleWalletModal} />
           <Transact openModal={openDemoModal} setModalState={setOpenDemoModal} />
-          <AppCalls openModal={appCallsDemoModal} setModalState={setAppCallsDemoModal} />
+          <DeployApp openModal={deployAppModal} setModalState={toggleDeployAppModal} />
+          <Deposit openModal={depositModal} setModalState={toggleDepositModal} />
+          <Withdraw openModal={withdrawModal} setModalState={toggleWithdrawModal} />
         </div>
       </div>
     </div>

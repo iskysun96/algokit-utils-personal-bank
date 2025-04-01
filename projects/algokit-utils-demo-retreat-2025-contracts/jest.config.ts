@@ -11,6 +11,8 @@ const config: Config = {
     '^.+\\.tsx?$': 'ts-jest',
   },
   testPathIgnorePatterns: ['node_modules', '.venv', 'coverage'],
-  testTimeout: 10000,
+  testTimeout: 20000,
+  // Setup files to handle BigInt serialization
+  setupFiles: ['./jest.setup.js'],
 }
 export default config

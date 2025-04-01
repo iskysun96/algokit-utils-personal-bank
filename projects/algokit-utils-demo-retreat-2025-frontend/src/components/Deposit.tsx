@@ -1,19 +1,19 @@
+import { AlgorandClient } from '@algorandfoundation/algokit-utils'
+import { AlgoAmount } from '@algorandfoundation/algokit-utils/types/amount'
 import { useWallet } from '@txnlab/use-wallet-react'
 import { useSnackbar } from 'notistack'
 import { useState } from 'react'
-import { HelloWorldFactory } from '../contracts/HelloWorld'
-import { OnSchemaBreak, OnUpdate } from '@algorandfoundation/algokit-utils/types/app'
+import { PersonalBankClient } from '../contracts/PersonalBank'
 import { getAlgodConfigFromViteEnvironment, getIndexerConfigFromViteEnvironment } from '../utils/network/getAlgoClientConfigs'
-import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 
 interface AppCallsInterface {
   openModal: boolean
   setModalState: (value: boolean) => void
 }
 
-const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
+const Deposit = ({ openModal, setModalState }: AppCallsInterface) => {
   const [loading, setLoading] = useState<boolean>(false)
-  const [contractInput, setContractInput] = useState<string>('')
+  const [depositAmount, setDepositAmount] = useState<string>('')
   const { enqueueSnackbar } = useSnackbar()
   const { transactionSigner, activeAddress } = useWallet()
 
@@ -23,6 +23,7 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
     algodConfig,
     indexerConfig,
   })
+
   algorand.setDefaultSigner(transactionSigner)
 
   const sendAppCall = async () => {
@@ -33,28 +34,24 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
     // Instead, you would deploy your contract on your backend and reference it by id.
     // Given the simplicity of the starter contract, we are deploying it on the frontend
     // for demonstration purposes.
-    const factory = new HelloWorldFactory({
-      defaultSender: activeAddress ?? undefined,
-      algorand,
-    })
-    const deployResult = await factory
-      .deploy({
-        onSchemaBreak: OnSchemaBreak.AppendApp,
-        onUpdate: OnUpdate.AppendApp,
-      })
-      .catch((e: Error) => {
-        enqueueSnackbar(`Error deploying the contract: ${e.message}`, { variant: 'error' })
-        setLoading(false)
-        return undefined
-      })
-
-    if (!deployResult) {
+    console.log(localStorage.getItem('deployed-app-id'))
+    const appId = JSON.parse(localStorage.getItem('deployed-app-id') ?? '0')
+    if (!appId) {
+      enqueueSnackbar('No app id found', { variant: 'error' })
+      setLoading(false)
       return
     }
+    const appClient = await algorand.client.getTypedAppClientById(PersonalBankClient, {
+      appId: appId,
+    })
 
-    const { appClient } = deployResult
+    const payTxn = await algorand.createTransaction.payment({
+      amount: AlgoAmount.Algo(Number(depositAmount)),
+      receiver: appClient.appAddress,
+      sender: activeAddress!,
+    })
 
-    const response = await appClient.send.hello({ args: { name: contractInput } }).catch((e: Error) => {
+    const response = await appClient.send.deposit({ args: { payTxn: payTxn }, sender: activeAddress! }).catch((e: Error) => {
       enqueueSnackbar(`Error calling the contract: ${e.message}`, { variant: 'error' })
       setLoading(false)
       return undefined
@@ -64,22 +61,24 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
       return
     }
 
-    enqueueSnackbar(`Response from the contract: ${response.return}`, { variant: 'success' })
+    enqueueSnackbar(`Successfully deposited: ${response.return!}`, { variant: 'success' })
+
     setLoading(false)
   }
 
   return (
     <dialog id="appcalls_modal" className={`modal ${openModal ? 'modal-open' : ''} bg-slate-200`}>
       <form method="dialog" className="modal-box">
-        <h3 className="font-bold text-lg">Say hello to your Algorand smart contract</h3>
+        {}
+        <h3 className="font-bold text-lg">Deposit to your personal bank</h3>
         <br />
         <input
           type="text"
           placeholder="Provide input to hello function"
           className="input input-bordered w-full"
-          value={contractInput}
+          value={depositAmount}
           onChange={(e) => {
-            setContractInput(e.target.value)
+            setDepositAmount(e.target.value)
           }}
         />
         <div className="modal-action ">
@@ -95,4 +94,4 @@ const AppCalls = ({ openModal, setModalState }: AppCallsInterface) => {
   )
 }
 
-export default AppCalls
+export default Deposit
