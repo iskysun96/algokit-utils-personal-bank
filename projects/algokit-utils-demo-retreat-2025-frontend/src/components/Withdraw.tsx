@@ -28,7 +28,6 @@ const Withdraw = ({ openModal, setModalState }: AppCallsInterface) => {
   const sendAppCall = async () => {
     setLoading(true)
 
-    console.log(localStorage.getItem('deployed-app-id'))
     const appId = JSON.parse(localStorage.getItem('deployed-app-id') ?? '0')
     if (!appId) {
       enqueueSnackbar('No app id found', { variant: 'error' })
@@ -37,10 +36,11 @@ const Withdraw = ({ openModal, setModalState }: AppCallsInterface) => {
     }
     const appClient = await algorand.client.getTypedAppClientById(PersonalBankClient, {
       appId: appId,
+      defaultSender: activeAddress!,
     })
 
     const response = await appClient.send
-      .withdraw({ args: {}, sender: activeAddress!, coverAppCallInnerTransactionFees: true, maxFee: AlgoAmount.MicroAlgo(3000) })
+      .withdraw({ args: {}, coverAppCallInnerTransactionFees: true, maxFee: AlgoAmount.MicroAlgo(3000) })
       .catch((e: Error) => {
         enqueueSnackbar(`Error calling the contract: ${e.message}`, { variant: 'error' })
         setLoading(false)

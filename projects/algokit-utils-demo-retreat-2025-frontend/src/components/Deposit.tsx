@@ -29,7 +29,6 @@ const Deposit = ({ openModal, setModalState }: AppCallsInterface) => {
   const sendAppCall = async () => {
     setLoading(true)
 
-    console.log(localStorage.getItem('deployed-app-id'))
     const appId = JSON.parse(localStorage.getItem('deployed-app-id') ?? '0')
     if (!appId) {
       enqueueSnackbar('No app id found', { variant: 'error' })
@@ -38,6 +37,7 @@ const Deposit = ({ openModal, setModalState }: AppCallsInterface) => {
     }
     const appClient = await algorand.client.getTypedAppClientById(PersonalBankClient, {
       appId: appId,
+      defaultSender: activeAddress!,
     })
 
     const payTxn = await algorand.createTransaction.payment({
@@ -46,7 +46,7 @@ const Deposit = ({ openModal, setModalState }: AppCallsInterface) => {
       sender: activeAddress!,
     })
 
-    const response = await appClient.send.deposit({ args: { payTxn: payTxn }, sender: activeAddress! }).catch((e: Error) => {
+    const response = await appClient.send.deposit({ args: { payTxn: payTxn } }).catch((e: Error) => {
       enqueueSnackbar(`Error calling the contract: ${e.message}`, { variant: 'error' })
       setLoading(false)
       return undefined

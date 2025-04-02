@@ -1,18 +1,17 @@
-from algopy import Txn, gtxn, Global, itxn, UInt64, Account, BoxMap, ARC4Contract
+from algopy import Account, ARC4Contract, BoxMap, Global, Txn, UInt64, gtxn, itxn
 from algopy.arc4 import abimethod
 
 
 class PersonalBank(ARC4Contract):
 
-    def __init__(self)-> None:
-        self.depositors = BoxMap(
-            Account, UInt64, key_prefix=""
-        ) 
-
+    def __init__(self) -> None:
+        self.depositors = BoxMap(Account, UInt64, key_prefix="")
 
     @abimethod()
     def deposit(self, pay_txn: gtxn.PaymentTransaction) -> UInt64:
-        assert pay_txn.receiver == Global.current_application_address, "Receiver must be the contract address"
+        assert (
+            pay_txn.receiver == Global.current_application_address
+        ), "Receiver must be the contract address"
         assert pay_txn.amount > 0, "Deposit amount must be greater than zero"
 
         deposit_amt, deposited = self.depositors.maybe(pay_txn.sender)
