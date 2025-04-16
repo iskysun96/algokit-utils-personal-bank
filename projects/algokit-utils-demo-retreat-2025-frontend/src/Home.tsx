@@ -2,7 +2,7 @@
 import { useWallet } from '@txnlab/use-wallet-react'
 import React, { useState } from 'react'
 import ConnectWallet from './components/ConnectWallet'
-import DeployApp from './components/deployApp'
+import DeployApp from './components/DeployApp'
 import Deposit from './components/Deposit'
 import Transact from './components/Transact'
 import Withdraw from './components/Withdraw'

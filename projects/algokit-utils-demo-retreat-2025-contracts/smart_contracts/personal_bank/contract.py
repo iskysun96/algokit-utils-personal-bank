@@ -5,10 +5,26 @@ from algopy.arc4 import abimethod
 class PersonalBank(ARC4Contract):
 
     def __init__(self) -> None:
+        """Initializes contract storages on deployment.
+
+        This BoxMap stores deposit amounts for each account.
+        The BoxMap uses Account addresses as keys and UInt64 values to track deposited amounts.
+        """
         self.depositors = BoxMap(Account, UInt64, key_prefix="")
 
     @abimethod()
     def deposit(self, pay_txn: gtxn.PaymentTransaction) -> UInt64:
+        """Deposits funds into the personal bank
+
+        This method accepts a payment transaction and records the deposit amount in the sender's BoxMap.
+        If the sender already has a deposit, the amount is added to their existing balance.
+
+        Args:
+            pay_txn: The payment transaction containing deposit information
+
+        Returns:
+            The total amount deposited by the sender after this transaction (as UInt64)
+        """
         assert (
             pay_txn.receiver == Global.current_application_address
         ), "Receiver must be the contract address"
@@ -25,6 +41,14 @@ class PersonalBank(ARC4Contract):
 
     @abimethod()
     def withdraw(self) -> UInt64:
+        """Withdraws all funds from the sender's account
+
+        This method transfers the entire balance of the sender's account back to them,
+        and resets their balance to zero. The sender must have a deposit to withdraw.
+
+        Returns:
+            The amount withdrawn (as UInt64)
+        """
         deposit_amt, deposited = self.depositors.maybe(Txn.sender)
         assert deposited, "No deposits found for this account"
 
