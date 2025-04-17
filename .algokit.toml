@@ -6,4 +6,4 @@ type = 'workspace'
 projects_root_path = 'projects'
 
 [project.run]
-build = ['algokit-utils-demo-retreat-2025-contracts', 'algokit-utils-demo-retreat-2025-frontend']
+build = ['algokit-utils-demo-retreat-2025-contracts', 'algokit-utils-demo-retreat-2025-contracts-ts', 'algokit-utils-demo-retreat-2025-frontend']
