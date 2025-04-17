@@ -5,10 +5,16 @@
       "name": "ROOT"
     },
     {
-      "path": "./projects/algokit-utils-demo-retreat-2025-contracts"
+      "path": "./projects/algokit-utils-demo-retreat-2025-contracts",
+      "name": "Python Contracts"
     },
     {
-      "path": "./projects/algokit-utils-demo-retreat-2025-frontend"
+      "path": "./projects/algokit-utils-demo-retreat-2025-frontend",
+      "name": "Frontend"
+    },
+    {
+      "path": "./projects/algokit-utils-demo-retreat-2025-contracts-ts",
+      "name": "TypeScript Contracts"
     }
   ],
   "settings": {
@@ -21,7 +27,7 @@
   "extensions": {
     "recommendations": ["joshx.workspace-terminals"]
   },
-  
+
   "tasks": {
     "version": "2.0.0",
     "tasks": [
@@ -67,4 +73,4 @@
       }
     ]
   }
-  }
+}
